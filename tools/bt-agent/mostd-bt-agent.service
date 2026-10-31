@@ -1,0 +1,15 @@
+[Unit]
+Description=Bluetooth phone behind mostd's SatRadio (metadata, seek, source on/off)
+After=bluetooth.service mostd.service
+Requires=bluetooth.service
+Wants=mostd.service
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/mostd-bt-agent --discoverable 120
+Environment=MOSTD_CTL_SOCKET=/run/mostd/sdars.sock
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

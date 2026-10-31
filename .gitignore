@@ -1,0 +1,41 @@
+# Build outputs (out-of-tree)
+/build/
+/dist/
+/.pkgroot.*/
+
+# Build artifacts
+*.o
+*.a
+*.so
+*.ko
+*.mod
+*.mod.c
+*.cmd
+*.order
+*.dtbo
+Module.symvers
+modules.order
+*.deb
+
+# Logs
+*.log
+
+# Editor/local config
+.vscode/
+.codex
+
+# Python cache/venv
+__pycache__/
+*.pyc
+venv/
+
+# Docs
+docs/
+
+# Local trace/decode artifacts
+central_registry_decoded.txt
+upload_most_log.py
+bt-capture.wav
+
+# Vendor datasheet, kept locally only
+driver/OS8104A.pdf

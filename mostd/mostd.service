@@ -1,0 +1,22 @@
+[Unit]
+Description=MOST daemon (mostd)
+After=systemd-udev-settle.service
+Wants=systemd-udev-settle.service
+ConditionPathExists=/usr/sbin/mostd
+
+[Service]
+Type=simple
+User=root
+Group=root
+RuntimeDirectory=mostd
+RuntimeDirectoryMode=0755
+Environment=MOSTD_CTL_SOCKET=/run/mostd/sdars.sock
+ExecStartPre=/bin/sh -c 'for i in $(seq 1 120); do [ -e /dev/most0 ] && exit 0; sleep 1; done; echo "mostd: /dev/most0 not found"; exit 1'
+ExecStart=/usr/sbin/mostd
+StandardOutput=append:/run/mostd.log
+StandardError=append:/run/mostd.log
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

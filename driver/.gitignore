@@ -1,0 +1,34 @@
+# Build artifacts from kernel modules
+*.o
+*.ko
+*.mod
+*.mod.c
+*.mod.o
+*.order
+*.su
+*.dwo
+*.cmd
+*.d
+.tmp_versions/
+modules.order
+Module.symvers
+
+# Device tree blobs
+*.dtb
+*.dtbo
+
+# Logs and editor files
+*.log
+*.swp
+*.swo
+*~
+.DS_Store
+.vscode/
+
+# Python/cache state
+__pycache__/
+*.pyc
+venv/
+
+# Source archives
+*.tar.gz

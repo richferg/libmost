@@ -1,0 +1,102 @@
+/dts-v1/;
+/plugin/;
+
+   / {
+	compatible = "brcm,bcm2835";
+	
+	fragment@0 {
+		target = <&spi0>;
+		
+		__overlay__ {
+			status = "okay";
+		};
+	};
+	fragment@1 {
+		target = <&spidev0>;
+		
+		__overlay__ {
+			status = "disabled";
+		};
+	};
+	fragment@2 {
+		target = <&gpio>;
+		
+		__overlay__ {
+			aint_pin: aint_pin {
+				brcm,pins = <2>;
+				brcm,pull = <2>;
+				brcm,function = <0>;
+			};
+			interrupt_pin: interrupt_pin {
+				brcm,pins = <5>;
+				brcm,pull = <2>;
+				brcm,function = <0>;
+			};
+			fault_pin: fault_pin {
+				brcm,pins = <6>;
+				brcm,pull = <2>;
+				brcm,function = <0>;
+			};
+			status_pin: status_pin {
+				brcm,pins = <16>;
+				brcm,pull = <2>;
+				brcm,function = <0>;
+			};
+			moststatus_pin: moststatus_pin {
+				brcm,pins = <26>;
+				brcm,pull = <2>;
+				brcm,function = <0>;
+			};
+			reset_pin: reset_pin {
+				brcm,pins = <17>;
+				brcm,function = <1>;
+			};
+		};
+	};
+	fragment@4 {
+		target = <&spi0>;
+		
+		__overlay__ {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			
+			most: os8104@0 {
+				reg = <0>;
+				compatible = "microchip,os8104";
+				pinctrl-names = "default";
+				pinctrl-0 = <&aint_pin &interrupt_pin &fault_pin &status_pin &moststatus_pin &reset_pin>;
+				spi-max-frequency = <180000>;
+				
+				interrupt-parent = <&gpio>;
+				interrupts = <2 0x02>,
+				             <5 0x02>, 
+				             <6 0x03>, 
+							 <16 0x03>, 
+							 <26 0x03>;
+				
+				aint-gpios = <&gpio 2 0>;
+				interrupt-gpios = <&gpio 5 0>;
+				fault-gpios = <&gpio 6 0>;
+				status-gpios = <&gpio 16 0>;
+				moststatus-gpios = <&gpio 26 0>;
+				reset-gpios = <&gpio 17 0>;
+
+                /*
+                 * Pre-lock defaults = unconfigured node. mostd self-addresses on
+                 * link-up: it reads the node position (bNPR) and sets the logical
+                 * node address to 0x0100|position (what the ring expects for our
+                 * slot) and group 0x00 (the nav uses no group). The real node
+                 * address depends on physical ring position, unknown until the
+                 * ring locks, so it cannot be baked here - 0x0000 is the genuine
+                 * unconfigured state every node sits in before self-addressing.
+                 */
+                node-addr = <0>;
+                group-addr = <0>;
+			};
+		};
+	};
+    __overrides__ {
+        node-addr = <&most>,"node-addr";
+        group-addr = <&most>,"group-addr";
+    };
+};
